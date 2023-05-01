@@ -3,7 +3,8 @@ import { db } from "@/lib/db"
 import { stripe } from "@/lib/stripe"
 import { ErrorResponse, SuccessResponse } from "@/utils/apiresponses"
 import { NextApiRequest, NextApiResponse } from "next"
-import { getServerSession } from "next-auth"
+import { Session, getServerSession } from "next-auth"
+import type { UserRoles } from '@/types/next-auth.d.ts'
 
 const hanlder = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
@@ -18,6 +19,16 @@ const hanlder = async (req: NextApiRequest, res: NextApiResponse) => {
         );
         if (!account.charges_enabled) {
             return ErrorResponse({ error: "UnAuthorized", res, status: 400 })
+        }
+        if (!user.roles.includes("instructor" as UserRoles)) {
+            await db.user.update({
+                where: { id: session.user.id },
+                data: {
+                    roles: {
+                        push: "instructor" as UserRoles
+                    }
+                }
+            })
         }
         return SuccessResponse({ res, data: {}, msg: "okay." })
     } catch (error: any) {

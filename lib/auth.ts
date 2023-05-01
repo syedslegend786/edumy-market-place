@@ -42,8 +42,18 @@ export const authOptions: AuthOptions = {
     },
     secret: process.env.NEXTAUTH_SECRET as string,
     callbacks: {
-        jwt: ({ token, user }) => {
-            if (user) {
+        jwt: async ({ token, user }) => {
+            const dbUser = await db.user.findFirst({
+                where: {
+                    email: token.email
+                }
+            })
+            if (dbUser) {
+                token.id = dbUser.id
+                token.name = dbUser.name
+                token.email = dbUser.email
+                token.roles = dbUser.roles
+            } else {
                 token.id = user.id
                 token.name = user.name
                 token.email = user.email
