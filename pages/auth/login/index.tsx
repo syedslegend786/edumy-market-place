@@ -4,6 +4,7 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react'
 import * as Yup from 'yup';
+import { useSearchParams } from 'next/navigation'
 const SigninSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email.").required("email is required."),
   password: Yup.string().required("password is required.")
@@ -13,6 +14,7 @@ interface IFormValues {
   password: string
 }
 const Login = () => {
+  const searchParam = useSearchParams()
   const intialValues: IFormValues = { email: '', password: '' }
   return (
     <div>
@@ -23,10 +25,18 @@ const Login = () => {
         onSubmit={async (values, { setSubmitting }) => {
           const res = await signIn("credentials", {
             ...values,
-            redirect: false
+            redirect: false,
           })
-          if(res?.ok){
-            window.location.href="/"
+          if (res?.error) {
+            return alert(res.error)
+          }
+          if (res?.ok) {
+            const from = searchParam.get("from")
+            if (from) {
+              window.location.href = `${from}`
+            } else {
+              window.location.href = "/"
+            }
           }
         }}
       >

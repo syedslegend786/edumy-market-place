@@ -18,22 +18,28 @@ export default withAuth(
         }
 
 
-        if (!isAuth) {
-            let from = req.nextUrl.pathname;
-            if (req.nextUrl.search) {
-                from += req.nextUrl.search;
-            }
-            return NextResponse.redirect(
-                new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url)
-            );
-        }
+        // if (!isAuth) {
+        //     let from = req.nextUrl.pathname;
+        //     if (req.nextUrl.search) {
+        //         from += req.nextUrl.search;
+        //     }
+        //     return NextResponse.redirect(
+        //         new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url)
+        //     );
+        // }
 
         const isInstructorPage =
             req.nextUrl.pathname.startsWith("/instructor")
 
         if (isInstructorPage) {
             if (isAuth && !token.roles.includes("instructor")) {
-                return NextResponse.redirect(new URL("/", req.url))
+                let from = req.nextUrl.pathname;
+                if (req.nextUrl.search) {
+                    from += req.nextUrl.search;
+                }
+                return NextResponse.redirect(
+                    new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url)
+                );
             }
             return null
         }

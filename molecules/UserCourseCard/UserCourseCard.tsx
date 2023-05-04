@@ -19,7 +19,12 @@ export const UserCourseCard = ({
       </div>
       <div className='p-1'>
         <h1 className='text-lg text-blue-600'> {name}</h1>
-        <h1>Price: {currencyFormaterClient({ amount: price, currency: "usd" })}</h1>
+        {
+          paid ?
+            <h1>Price: {currencyFormaterClient({ amount: price, currency: "usd" })}</h1>
+            :
+            <h1>Free</h1>
+        }
         <p className='line-clamp-3 text-xs text-gray-400'>{description}</p>
         <Badge text={category} />
       </div>

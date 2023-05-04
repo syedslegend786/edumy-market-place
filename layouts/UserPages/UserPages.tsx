@@ -2,8 +2,9 @@ import { makeInstructorApi } from '@/services/api/instructor'
 import { Button } from '@/ui'
 import { handleFrontEndResponse } from '@/utils/apiresponses'
 import clsx from 'clsx'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { AiOutlineUser } from 'react-icons/ai'
 import { FiSettings } from 'react-icons/fi'
@@ -17,6 +18,7 @@ const instructorRoutes = [{
 }] as { title: string, to: string }[]
 
 const UserPagesLayout = ({ children }: UserPagesProps) => {
+    const router = useRouter()
     const [showMenu, setshowMenu] = useState(false)
     const { data: session } = useSession()
     const handleBecomeInstructor = async () => {
@@ -29,10 +31,10 @@ const UserPagesLayout = ({ children }: UserPagesProps) => {
         }
     }
     return (
-        <div className='p-5'>
-            <div className='flex justify-between'>
+        <div className=''>
+            <div className='flex justify-between p-3'>
                 <div>
-                    <Button text='Home' />
+                    <Button text='Home' onClick={() => { router.push("/") }} />
                 </div>
                 <div className='flex items-center gap-x-5'>
                     {
@@ -47,9 +49,9 @@ const UserPagesLayout = ({ children }: UserPagesProps) => {
                     }
                     {
                         session?.user ?
-                            <Button text='Logout' />
+                            <Button onClick={() => { signOut() }} text='Logout' />
                             :
-                            <Button text='Login' />
+                            <Button onClick={() => { router.push(`/auth/login`) }} text='Login' />
                     }
                     <div className=' relative'>
                         <FiSettings onClick={() => { setshowMenu(!showMenu) }} className='cursor-pointer' size={20} />
@@ -66,9 +68,22 @@ const UserPagesLayout = ({ children }: UserPagesProps) => {
                                         <Link href={r.to} key={ri} className='hover:bg-green-600 hover:text-white p-2 text-white cursor-pointer text-xs'>{r.title}</Link>
                                     ))
                                     :
-                                    <h1 onClick={handleBecomeInstructor}
-                                        className='hover:bg-green-600 !w-full hover:text-white p-2 text-white cursor-pointer text-xs'
-                                    >Become Instructor</h1>
+                                    <>
+                                        <h1
+                                            onClick={handleBecomeInstructor}
+                                            className='hover:bg-green-600 !w-full hover:text-white p-2 text-white cursor-pointer text-xs'
+                                        >
+                                            Become Instructor
+                                        </h1>
+                                        <h1
+                                            onClick={()=>{
+                                                router.push('/course/mylearning/list')
+                                            }}
+                                            className='hover:bg-green-600 !w-full hover:text-white p-2 text-white cursor-pointer text-xs'
+                                        >
+                                            My Learnings
+                                        </h1>
+                                    </>
                             }
                         </div>
                     </div>

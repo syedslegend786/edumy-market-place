@@ -31,9 +31,11 @@ export const authOptions: AuthOptions = {
                         id: user.id, roles: user.roles, email: user.email, name: user.name, image: ""
                     } as Session["user"]
                     return toReturn;
+                } else {
+                    throw Error("Incorrect Credentials")
+                    return null;
                 }
-                throw Error("incorrect credentials")
-                return null
+
             }
         })
     ],

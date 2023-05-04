@@ -2,6 +2,7 @@ import { InstructorLayout } from '@/layouts'
 import { db } from '@/lib/db'
 import { axios } from '@/services/api/axios'
 import { Button } from '@/ui'
+import { serializeJsonObject } from '@/utils/serializeJsonObject'
 import { Course, Lesson } from '@prisma/client'
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
@@ -98,7 +99,7 @@ export const getServerSideProps: GetServerSideProps<SingleCoursePageProp> = asyn
     })
     return {
         props: {
-            course
+            course: serializeJsonObject(course)
         }
     }
 }

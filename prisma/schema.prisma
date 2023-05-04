@@ -38,9 +38,9 @@ model Session {
 }
 
 model User {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
   name              String?
-  email             String?   @unique
+  email             String?    @unique
   emailVerified     DateTime?
   image             String?
   accounts          Account[]
@@ -48,7 +48,11 @@ model User {
   password          String?
   roles             String[]
   stripe_account_id String?
+  stripe_session_id String?
   Course            Course[]
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  Enrolled          Enrolled[]
 }
 
 model VerificationToken {
@@ -61,24 +65,39 @@ model VerificationToken {
 }
 
 model Course {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   description  String
-  price        Float    @default(9.99)
-  paid         Boolean  @default(true)
+  price        Float      @default(9.99)
+  paid         Boolean    @default(true)
   category     String
   imagePreview String
-  user         User     @relation(fields: [userId], references: [id])
-  userId       String   @db.ObjectId
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String     @db.ObjectId
   Lesson       Lesson[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  Enrolled     Enrolled[]
 }
 
 model Lesson {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   description  String
   video        String
-  courseId     String  @db.ObjectId
-  course       Course  @relation(fields: [courseId], references: [id])
+  courseId     String   @db.ObjectId
+  course       Course   @relation(fields: [courseId], references: [id])
   free_preview Boolean? @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Enrolled {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
