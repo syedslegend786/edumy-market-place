@@ -17,6 +17,10 @@ export const instructorLinksData = [
         link: "/instructor",
         text: "Dashboard"
     },
+    {
+        text: "Rvenue",
+        link: "/instructor/revenue"
+    }
 
 
 ] as ILinks[]

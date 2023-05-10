@@ -10,3 +10,4 @@ export const calculatePlaterformFee = (price: number): number => {
 }
 
 export const usdToCents = (price: number) => Math.round(Number(price.toFixed(2)) * 100)
+export const centsToUsd = (price: number) => Math.round(Number(price.toFixed(2)) / 100)

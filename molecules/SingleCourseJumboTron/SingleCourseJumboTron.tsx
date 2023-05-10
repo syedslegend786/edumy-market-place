@@ -23,6 +23,7 @@ interface SingleCourseJumboTronProps {
     course: (Course & {
         Lesson: {
             video: string;
+            id: string
         }[];
         Enrolled: Enrolled[];
         user: {
@@ -138,7 +139,9 @@ export const SingleCourseJumboTron = ({
                         <Button onClick={hanldeLoginToEnroll} text='Login to enroll' size='medium' className='w-full mt-5' />
                         :
                         (Enrolled.length > 0 && Enrolled[0].userId === session?.user.id) ?
-                            <Button text='Go to the course' size='medium' className='w-full mt-5' />
+                            <Button onClick={() => {
+                                router.push(`/course/mylearning/${id}/${Lesson[0].id}`)
+                            }} text='Go to the course' size='medium' className='w-full mt-5' />
                             :
                             <Button
                                 loading={freeEnrolMutaion.isLoading || paidEnrollMutation.isLoading}
